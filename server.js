@@ -43,11 +43,9 @@ db.once("open", () => {
 
   changeStream.on("change", (change) => {
     // console.log(change);
-    console.log("yoo1");
 
     switch (change.operationType) {
       case "insert":
-        console.log("yoo2");
         const messageDetails = change.fullDocument;
         pusher.trigger("messages", "inserted", {
           name: messageDetails.name,
@@ -55,7 +53,6 @@ db.once("open", () => {
           timestamp: messageDetails.timestamp,
           received: messageDetails.received,
         });
-        console.log("yoo3");
         break;
       default:
         console.log("❌ Error occured in Pusher");
