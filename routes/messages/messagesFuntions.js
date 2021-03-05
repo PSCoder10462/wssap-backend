@@ -3,7 +3,6 @@ import Messages from "../../models/dbMessages.js";
 export const newMessage = (req, res) => {
   {
     const message = req.body;
-    console.log(message);
     Messages.create(message, (err, data) => {
       // status code
       // 201 -> create successful
