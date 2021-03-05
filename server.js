@@ -1,10 +1,14 @@
 // importing
 import express from "express";
 import mongoose from "mongoose";
-import Messages from "./dbMessages.js";
+// import Messages from "./models/dbMessages.js";
 import Pusher from "pusher";
 import cors from "cors";
+import passport from "passport";
+import session from "express-session";
 import { pusher_keys, CONNECTION_URL } from "./keys.js";
+import IMPORTED_ROUTES_DB from "./routes/messages/messagesRoutes.js";
+import IMPORTED_ROUTES_AUTH from "./routes/auth/authRoutes.js";
 
 // app config
 const app = express(),
@@ -15,6 +19,18 @@ const pusher = new Pusher(pusher_keys);
 // middleware
 app.use(express.json());
 app.use(cors());
+
+app.use(
+  session({
+    secret: "thisismeps",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: "auto" },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 // securing msg, currently allowing from everyone
 // app.use((req, res, next) => {
 //   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -66,31 +82,9 @@ mongoose
   .connect(CONNECTION_URL, DEPRECATED_FIX)
   .catch((error) => console.log("❌ MongoDB:", error));
 
-// its magic??
-
 // api routes
-app.get("/", (req, res) => {
-  // status code
-  // 200 -> ok
-  res.status(200).send("hello world of express");
-});
-
-app.get("/messages/sync", (req, res) => {
-  Messages.find((err, data) => {
-    err ? res.status(500).send(err) : res.status(200).send(data);
-  });
-});
-
-app.post("/messages/new", (req, res) => {
-  const dbMessage = req.body;
-
-  Messages.create(dbMessage, (err, data) => {
-    // status code
-    // 201 -> create successful
-    // 500 -> internal server error
-    err ? res.status(500).send(err) : res.status(201).send(data);
-  });
-});
+app.use("/messages", IMPORTED_ROUTES_DB);
+app.use("/auth", IMPORTED_ROUTES_AUTH);
 
 // listener
 app.listen(port, () => {
