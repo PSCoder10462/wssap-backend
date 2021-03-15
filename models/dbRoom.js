@@ -11,25 +11,6 @@ const roomSchema = new mongoose.Schema({
   lastMessage: Object,
 });
 
-// const whatsappSchema = mongoose.Schema({
-//   message: String,
-//   name: String,
-//   timestamp: String,
-//   user: {
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: "user",
-//   },
-// });
-
 roomSchema.plugin(findOrCreate);
 
 export default mongoose.model("rooms", roomSchema);
-
-// Room: {
-//   messages: [
-//     {
-//       string,
-//       timestamp,
-//     },
-//   ];
-// }

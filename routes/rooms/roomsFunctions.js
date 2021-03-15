@@ -46,18 +46,25 @@ export const joinRoom = (req, res) => {
       console.log(err);
     });
 };
-// dp
-// name
-// last message : timestamp
-// id
 
-// Users.findById().populate("rooms");
-// Rooms.findById(user?.room?._id).populate;
-// export const getRoom = (req, res) => {
+export const activateRoom = (req, res) => {
+  const id = req.headers.id;
 
-// }
+  Rooms.findById(id)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((err) => console.log(err.message));
+};
 
-// get request -> data -> state - data (show)
-// post request -> if successful -> state update (push data)
-// state -> real TimeRange
-// refresh -> data fetch
+export const addMessage = (req, res) => {
+  const id = req.body.id;
+  const m = req.body.message;
+  const { name, message, timestamp } = m;
+  Rooms.findByIdAndUpdate(
+    id,
+    { $push: { messages: m }, lastMessage: { name, message, timestamp } },
+    (err, data) =>
+      err ? res.status(500).send(error) : res.status(201).send(data)
+  );
+};
