@@ -9,6 +9,7 @@ import session from "express-session";
 import { pusher_keys, CONNECTION_URL } from "./keys.js";
 import IMPORTED_ROUTES_DB from "./routes/messages/messagesRoutes.js";
 import IMPORTED_ROUTES_AUTH from "./routes/auth/authRoutes.js";
+import IMPORTED_ROUTES_ROOMS from "./routes/rooms/roomsRoutes.js";
 
 // app config
 const app = express(),
@@ -45,6 +46,7 @@ const DEPRECATED_FIX = {
   useCreateIndex: true,
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
 };
 
 db.on("error", (error) => console.log("❌ MongoDB:", error)); // listen for errors after the connection is established (errors during the session)
@@ -85,6 +87,7 @@ mongoose
 // api routes
 app.use("/messages", IMPORTED_ROUTES_DB);
 app.use("/auth", IMPORTED_ROUTES_AUTH);
+app.use("/rooms", IMPORTED_ROUTES_ROOMS);
 
 // listener
 app.listen(port, () => {

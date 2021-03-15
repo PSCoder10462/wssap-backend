@@ -2,8 +2,15 @@ import Messages from "../../models/dbMessages.js";
 
 export const newMessage = (req, res) => {
   {
+    const user = req.user;
     const message = req.body;
-    Messages.create(message, (err, data) => {
+    const m = {
+      ...message,
+      name: user.name,
+      user: user._id,
+    };
+
+    Messages.create(m, (err, data) => {
       // status code
       // 201 -> create successful
       // 500 -> internal server error
@@ -13,7 +20,11 @@ export const newMessage = (req, res) => {
 };
 
 export const syncMessages = (req, res) => {
-  Messages.find((err, data) => {
-    err ? res.status(500).send(err) : res.status(200).send(data);
-  });
+  // field to be populated inside message
+  Messages.find()
+    .populate("user")
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((err) => res.status(500).send(err));
 };

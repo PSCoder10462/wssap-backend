@@ -4,7 +4,10 @@ const whatsappSchema = mongoose.Schema({
   message: String,
   name: String,
   timestamp: String,
-  received: Boolean,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+  },
 });
 
 // messageContent here is a collection

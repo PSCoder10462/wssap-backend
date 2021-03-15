@@ -12,32 +12,34 @@ export const login = (req, res) => {
     });
   }
   // Finding user
-  Users.findOne({ email }).then((user) => {
-    // User not found
-    if (!user) {
-      return res.status(422).json({
-        error: "Invalid Email / Password",
-      });
-    }
-    bcrypt
-      .compare(password, user.password)
-      .then((matched) => {
-        if (matched) {
-          const token = jwt.sign({ _id: user._id }, JWT_SECRET);
-          const { _id, name, email } = user;
-          res.json({
-            message: "Logged In Successfully",
-            token,
-            user: { _id, name, email },
-          });
-        } else {
-          return res.status(422).json({
-            error: "Invalid Email / Password",
-          });
-        }
-      })
-      .catch((err) => console.log(err));
-  });
+  Users.findOne({ email })
+    .populate({ path: "rooms", select: "name lastMessage" })
+    .then((user) => {
+      // User not found
+      if (!user) {
+        return res.status(422).json({
+          error: "Invalid Email / Password",
+        });
+      }
+      bcrypt
+        .compare(password, user.password)
+        .then((matched) => {
+          if (matched) {
+            const token = jwt.sign({ _id: user._id }, JWT_SECRET);
+            const { _id, name, email, rooms } = user;
+            res.json({
+              message: "Logged In Successfully",
+              token,
+              user: { _id, name, email, rooms },
+            });
+          } else {
+            return res.status(422).json({
+              error: "Invalid Email / Password",
+            });
+          }
+        })
+        .catch((err) => console.log(err));
+    });
 };
 
 export const signup = (req, res) => {

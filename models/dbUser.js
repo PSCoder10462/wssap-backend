@@ -14,12 +14,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  //   rooms: [
-  //     {
-  //       type: mongoose.Schema.Types.ObjectId,
-  //       ref: "room",
-  //     },
-  //   ],
+  rooms: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "rooms", // collection
+    },
+  ],
 });
 
 userSchema.plugin(findOrCreate);
