@@ -1,13 +1,11 @@
 // importing
 import express from "express";
 import mongoose from "mongoose";
-// import Messages from "./models/dbMessages.js";
 import Pusher from "pusher";
 import cors from "cors";
 import passport from "passport";
 import session from "express-session";
 import { pusher_keys, CONNECTION_URL } from "./keys.js";
-import IMPORTED_ROUTES_DB from "./routes/messages/messagesRoutes.js";
 import IMPORTED_ROUTES_AUTH from "./routes/auth/authRoutes.js";
 import IMPORTED_ROUTES_ROOMS from "./routes/rooms/roomsRoutes.js";
 
@@ -56,27 +54,27 @@ db.once("open", () => {
   console.log("✅ MongoDB connected");
 
   // this collection must be same as one named in dbMessages model
-  const msgCollection = db.collection("messagecontents");
-  const changeStream = msgCollection.watch();
+  // const msgCollection = db.collection("messagecontents");
+  // const changeStream = msgCollection.watch();
 
-  changeStream.on("change", (change) => {
-    // console.log(change);
+  // changeStream.on("change", (change) => {
+  //   // console.log(change);
 
-    switch (change.operationType) {
-      case "insert":
-        const messageDetails = change.fullDocument;
-        pusher.trigger("messages", "inserted", {
-          name: messageDetails.name,
-          message: messageDetails.message,
-          timestamp: messageDetails.timestamp,
-          received: messageDetails.received,
-        });
-        break;
-      default:
-        console.log("❌ Error occured in Pusher");
-        break;
-    }
-  });
+  //   switch (change.operationType) {
+  //     case "insert":
+  //       const messageDetails = change.fullDocument;
+  //       pusher.trigger("messages", "inserted", {
+  //         name: messageDetails.name,
+  //         message: messageDetails.message,
+  //         timestamp: messageDetails.timestamp,
+  //         received: messageDetails.received,
+  //       });
+  //       break;
+  //     default:
+  //       console.log("❌ Error occured in Pusher");
+  //       break;
+  //   }
+  // });
 });
 
 // connect to db
@@ -85,7 +83,6 @@ mongoose
   .catch((error) => console.log("❌ MongoDB:", error));
 
 // api routes
-app.use("/messages", IMPORTED_ROUTES_DB);
 app.use("/auth", IMPORTED_ROUTES_AUTH);
 app.use("/rooms", IMPORTED_ROUTES_ROOMS);
 
