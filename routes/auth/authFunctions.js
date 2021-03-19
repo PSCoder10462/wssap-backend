@@ -26,11 +26,11 @@ export const login = (req, res) => {
         .then((matched) => {
           if (matched) {
             const token = jwt.sign({ _id: user._id }, JWT_SECRET);
-            const { _id, name, email, rooms } = user;
+            const { _id, name, email, rooms, image } = user;
             res.json({
               message: "Logged In Successfully",
               token,
-              user: { _id, name, email, rooms },
+              user: { _id, name, email, rooms, image },
             });
           } else {
             return res.status(422).json({
@@ -77,3 +77,20 @@ export const signup = (req, res) => {
     })
     .catch((err) => console.log(err));
 };
+
+export const addImage = (req, res) => {
+  const { _id } = req.user;
+  const { url } = req.body;
+
+  Users.findByIdAndUpdate(_id, { image: url }, (err, data) =>
+    err ? res.status(500).send(error) : res.status(201).send(data)
+  );
+};
+
+// export const changeName = (req, res) => {
+//   const { _id } = req.user;
+//   const { name } = req.body;
+//   Users.findByIdAndUpdate(_id, { name: name }, (err, data) =>
+//     err ? res.status(500).send(error) : res.status(201).send(data)
+//   );
+// };

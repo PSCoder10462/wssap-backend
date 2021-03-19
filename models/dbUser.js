@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
       ref: "rooms", // collection
     },
   ],
+  image: String,
 });
 
 userSchema.plugin(findOrCreate);

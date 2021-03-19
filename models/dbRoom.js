@@ -9,6 +9,7 @@ const roomSchema = new mongoose.Schema({
   messages: [Object],
   // username, timestamp, string
   lastMessage: Object,
+  image: String,
 });
 
 roomSchema.plugin(findOrCreate);

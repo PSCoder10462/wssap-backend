@@ -68,3 +68,10 @@ export const addMessage = (req, res) => {
       err ? res.status(500).send(error) : res.status(201).send(data)
   );
 };
+
+export const addImage = (req, res) => {
+  const { id, url } = req.body;
+  Rooms.findByIdAndUpdate(id, { image: url }),
+    (err, data) =>
+      err ? res.status(500).send(error) : res.status(201).send(data);
+};

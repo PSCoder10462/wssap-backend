@@ -54,27 +54,22 @@ db.once("open", () => {
   console.log("✅ MongoDB connected");
 
   // this collection must be same as one named in dbMessages model
-  // const msgCollection = db.collection("messagecontents");
-  // const changeStream = msgCollection.watch();
+  const userCollection = db.collection("users");
+  const changeStream = userCollection.watch({ fullDocument: "updateLookup" });
 
-  // changeStream.on("change", (change) => {
-  //   // console.log(change);
-
-  //   switch (change.operationType) {
-  //     case "insert":
-  //       const messageDetails = change.fullDocument;
-  //       pusher.trigger("messages", "inserted", {
-  //         name: messageDetails.name,
-  //         message: messageDetails.message,
-  //         timestamp: messageDetails.timestamp,
-  //         received: messageDetails.received,
-  //       });
-  //       break;
-  //     default:
-  //       console.log("❌ Error occured in Pusher");
-  //       break;
-  //   }
-  // });
+  changeStream.on("change", (change) => {
+    switch (change.operationType) {
+      case "update":
+        const user = change.fullDocument;
+        pusher.trigger("user", "updated", {
+          user,
+        });
+        break;
+      default:
+        console.log("❌ Error occured in Pusher");
+        break;
+    }
+  });
 });
 
 // connect to db
