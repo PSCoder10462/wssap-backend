@@ -55,14 +55,29 @@ db.once("open", () => {
 
   // this collection must be same as one named in dbMessages model
   const userCollection = db.collection("users");
-  const changeStream = userCollection.watch({ fullDocument: "updateLookup" });
+  const userStream = userCollection.watch({ fullDocument: "updateLookup" });
+  const roomCollection = db.collection("rooms");
+  const roomStream = roomCollection.watch({ fullDocument: "updateLookup" });
 
-  changeStream.on("change", (change) => {
+  userStream.on("change", (change) => {
     switch (change.operationType) {
       case "update":
         const user = change.fullDocument;
         pusher.trigger("user", "updated", {
           user,
+        });
+        break;
+      default:
+        console.log("❌ Error occured in Pusher");
+        break;
+    }
+  });
+  roomStream.on("change", (change) => {
+    switch (change.operationType) {
+      case "update":
+        const room = change.fullDocument;
+        pusher.trigger("room", "updated", {
+          room,
         });
         break;
       default:

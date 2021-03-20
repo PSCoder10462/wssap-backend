@@ -19,7 +19,7 @@ export const createRoom = (req, res) => {
 export const getRooms = (req, res) => {
   const user = req.user;
   Users.findById(user._id)
-    .populate({ path: "rooms", select: "name lastMessage" })
+    .populate({ path: "rooms", select: "name lastMessage image" })
     .then((user) => {
       res.send(user.rooms);
     })
@@ -71,7 +71,7 @@ export const addMessage = (req, res) => {
 
 export const addImage = (req, res) => {
   const { id, url } = req.body;
-  Rooms.findByIdAndUpdate(id, { image: url }),
-    (err, data) =>
-      err ? res.status(500).send(error) : res.status(201).send(data);
+  Rooms.findByIdAndUpdate(id, { image: url }, (err, data) =>
+    err ? res.status(500).send(error) : res.status(201).send(data)
+  );
 };
