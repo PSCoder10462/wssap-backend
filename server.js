@@ -8,6 +8,7 @@ import session from "express-session";
 import { pusher_keys, CONNECTION_URL } from "./keys.js";
 import IMPORTED_ROUTES_AUTH from "./routes/auth/authRoutes.js";
 import IMPORTED_ROUTES_ROOMS from "./routes/rooms/roomsRoutes.js";
+import IMPORTED_ROUTES_CLOUDINARY from "./routes/cloudinary/cloudinaryRoutes.js";
 
 // app config
 const app = express(),
@@ -95,6 +96,7 @@ mongoose
 // api routes
 app.use("/auth", IMPORTED_ROUTES_AUTH);
 app.use("/rooms", IMPORTED_ROUTES_ROOMS);
+app.use("/cloudinary", IMPORTED_ROUTES_CLOUDINARY);
 
 // listener
 app.listen(port, () => {
