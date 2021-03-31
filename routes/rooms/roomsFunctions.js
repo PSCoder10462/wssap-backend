@@ -60,10 +60,10 @@ export const activateRoom = (req, res) => {
 export const addMessage = (req, res) => {
   const id = req.body.id;
   const m = req.body.message;
-  const { name, message, timestamp } = m;
+  const { name, message, timestamp, url } = m;
   Rooms.findByIdAndUpdate(
     id,
-    { $push: { messages: m }, lastMessage: { name, message, timestamp } },
+    { $push: { messages: m }, lastMessage: { name, message, timestamp, url } },
     (err, data) =>
       err ? res.status(500).send(error) : res.status(201).send(data)
   );
