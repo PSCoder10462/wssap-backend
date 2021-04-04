@@ -1,7 +1,6 @@
 import Users from "../../models/dbUser.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../../keys.js";
 
 export const login = (req, res) => {
   const { email, password } = req.body;
@@ -25,7 +24,7 @@ export const login = (req, res) => {
         .compare(password, user.password)
         .then((matched) => {
           if (matched) {
-            const token = jwt.sign({ _id: user._id }, JWT_SECRET);
+            const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
             const { _id, name, email, rooms, image } = user;
             res.json({
               message: "Logged In Successfully",
@@ -64,7 +63,7 @@ export const signup = (req, res) => {
         Users.create({ name, email, password: hashedPassword })
           .then((user) => {
             //generating token
-            const token = jwt.sign({ _id: user._id }, JWT_SECRET);
+            const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
             const { _id, name, email } = user;
             res.json({
               message: "Signed Up Successfully",

@@ -5,7 +5,7 @@ import Pusher from "pusher";
 import cors from "cors";
 import passport from "passport";
 import session from "express-session";
-import { pusher_keys, CONNECTION_URL } from "./keys.js";
+import dotenv from "dotenv";
 import IMPORTED_ROUTES_AUTH from "./routes/auth/authRoutes.js";
 import IMPORTED_ROUTES_ROOMS from "./routes/rooms/roomsRoutes.js";
 import IMPORTED_ROUTES_CLOUDINARY from "./routes/cloudinary/cloudinaryRoutes.js";
@@ -14,7 +14,15 @@ import IMPORTED_ROUTES_CLOUDINARY from "./routes/cloudinary/cloudinaryRoutes.js"
 const app = express(),
   port = process.env.PORT || 5000;
 
-const pusher = new Pusher(pusher_keys);
+dotenv.config();
+
+const pusher = new Pusher({
+  appId: process.env.Pusher_appId,
+  key: process.env.Pusher_key,
+  secret: process.env.Pusher_secret,
+  cluster: process.env.Pusher_cluster,
+  useTLS: process.env.Pusher_useTLS,
+});
 
 // middleware
 app.use(express.json());
@@ -90,7 +98,7 @@ db.once("open", () => {
 
 // connect to db
 mongoose
-  .connect(CONNECTION_URL, DEPRECATED_FIX)
+  .connect(process.env.CONNECTION_URL, DEPRECATED_FIX)
   .catch((error) => console.log("❌ MongoDB:", error));
 
 // api routes
