@@ -106,6 +106,11 @@ app.use("/auth", IMPORTED_ROUTES_AUTH);
 app.use("/rooms", IMPORTED_ROUTES_ROOMS);
 app.use("/cloudinary", IMPORTED_ROUTES_CLOUDINARY);
 
+// home
+app.get("/", (_req, res) => {
+  res.send("henlo");
+});
+
 // listener
 app.listen(port, () => {
   console.log("listening at: http://localhost:" + port);
